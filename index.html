@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-font="xingkai" data-texture="feather">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我的小站</title>
+  <meta name="description" content="记录、收藏，和一些喜欢的东西。">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="has-hero" data-view="home">
+
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name" id="brandName">我的小站</span>
+      </a>
+      <nav class="nav" aria-label="站内导航">
+        <a href="#home" data-view="home">主页</a>
+        <a href="#moments" data-view="moments">动态</a>
+        <a href="#study" data-view="study">学习</a>
+        <a href="#life" data-view="life">生活</a>
+        <a href="#anime" data-view="anime">番剧</a>
+        <a href="#game" data-view="game">游戏</a>
+        <a href="#board" data-view="board">留言板</a>
+        <a href="#" id="navArchive">归档</a>
+      </nav>
+      <div class="topbar__actions">
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="切换深浅色"></button>
+        <button class="iconbtn" id="panelBtn" type="button" aria-label="主页主题设置" aria-expanded="false"></button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <!-- 首屏背景轮播：内容由 js/home.js 根据 posts.js 里的 SCENES 自动生成。
+         要换图 = 改 posts.js 的 SCENES（可以放任意多张），不用动这里。 -->
+    <div class="hero__slides" id="heroSlides" aria-hidden="true"></div>
+    <div class="hero__veil" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <p class="hero__eyebrow" id="heroEyebrow">WELCOME</p>
+      <h1 class="hero__title" id="heroTitle">欢迎来到我的小站</h1>
+      <p class="hero__sub"><span id="typed"></span><i class="caret" aria-hidden="true"></i></p>
+    </div>
+    <!-- 深色首屏与白色内容区的交界：三层同形波浪，横向无缝循环流动。
+         关键：viewBox 宽 2400（= 视口宽的 2 倍），图形在 0~1200 内画完整一段，
+             再把这一段复制平移到 1200~2400，于是首尾天然吻合；
+             SVG 元素本身宽度只有 100%，靠 translate3d 走 -50%（正好一个周期）
+             回到起点，因此永远看不到"闪现"。 -->
+    <div class="hero__wave" aria-hidden="true">
+      <!-- 每条 path：0~1200 画一段完整波形，然后把每个坐标 +1200 原样复制一遍，
+           于是 0 和 2400 处的高度相同、形状连续，动画走 -50% 时首尾完美衔接 -->
+      <svg class="wave wave--far" viewBox="0 0 2400 120" preserveAspectRatio="none">
+        <path d="M0,44 C120,20 240,68 360,54 C480,40 600,86 720,66 C840,46 960,22 1080,52 C1140,66 1170,52 1200,44
+                 C1320,20 1440,68 1560,54 C1680,40 1800,86 1920,66 C2040,46 2160,22 2280,52 C2340,66 2370,52 2400,44 L2400,120 L0,120 Z"/>
+      </svg>
+      <svg class="wave wave--mid" viewBox="0 0 2400 120" preserveAspectRatio="none">
+        <path d="M0,62 C140,88 280,36 420,58 C560,80 700,40 840,64 C980,88 1120,44 1200,62
+                 C1340,88 1480,36 1620,58 C1760,80 1900,40 2040,64 C2180,88 2320,44 2400,62 L2400,120 L0,120 Z"/>
+      </svg>
+      <svg class="wave wave--front" viewBox="0 0 2400 120" preserveAspectRatio="none">
+        <path d="M0,80 C160,58 320,104 480,84 C640,64 800,100 960,78 C1080,64 1140,80 1200,80
+                 C1360,58 1520,104 1680,84 C1840,64 2000,100 2160,78 C2280,64 2340,80 2400,80 L2400,120 L0,120 Z"/>
+      </svg>
+    </div>
+  </section>
+
+  <main class="wrap">
+    <div class="layout">
+
+      <!-- 左侧栏 -->
+      <aside class="aside aside--left">
+        <div class="card profile">
+          <span class="profile__ava">
+            <img src="images/avatar.jpg" alt="" onerror="this.remove()">
+            <i id="avaLetter">Hi</i>
+          </span>
+          <b class="profile__name" id="sideName">我的小站</b>
+          <p class="profile__motto" id="sideMotto"></p>
+        </div>
+
+        <div class="card">
+          <div class="card__title">公告
+            <button type="button" class="mini-btn admin-only" id="noticeEdit">编辑</button>
+          </div>
+          <p class="notice" id="noticeText"></p>
+        </div>
+
+        <div class="card">
+          <div class="card__title">分类</div>
+          <div class="catlist" id="catList"></div>
+        </div>
+      </aside>
+
+      <!-- 中间内容 -->
+      <div class="content">
+
+        <section class="view" data-view="home">
+          <nav class="pills" id="pills" aria-label="按分类筛选"></nav>
+          <div class="tagbar">
+            <span class="tagbar__ico" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <path d="M2.5 6.2h9.4a2.6 2.6 0 1 0-2.6-2.6"/>
+                <path d="M2.5 10h13"/>
+                <path d="M2.5 13.8h7.6a2.6 2.6 0 1 1-2.6 2.6"/>
+              </svg>
+            </span>
+            <input id="tagSearch" list="tagList" placeholder="输入标签搜索，如：MLP、静态站点…" autocomplete="off">
+            <datalist id="tagList"></datalist>
+          </div>
+          <div class="tagbanner" id="tagBanner" hidden></div>
+          <div class="tagbanner" id="dateBanner" hidden></div>
+          <div class="posts" id="posts" data-layout="list"></div>
+        </section>
+
+        <section class="view card viewcard" data-view="moments" hidden>
+          <div class="card__title viewcard__head">动态
+            <span class="viewcard__desc">随手记录的碎片</span>
+            <button type="button" class="mini-btn admin-only" id="momentAdd">＋ 发布动态</button>
+          </div>
+          <div id="momentsBox"></div>
+        </section>
+
+        <section class="view" data-view="study" hidden>
+          <div class="posts" data-list="study"></div>
+        </section>
+
+        <section class="view" data-view="life" hidden>
+          <div class="posts" data-list="life"></div>
+        </section>
+
+        <section class="view card viewcard" data-view="anime" hidden>
+          <div class="card__title viewcard__head">番剧
+            <span class="viewcard__desc">我的追番清单</span>
+          </div>
+          <div class="mgrid" id="animeGrid"></div>
+        </section>
+
+        <section class="view card viewcard" data-view="game" hidden>
+          <div class="card__title viewcard__head">游戏
+            <span class="viewcard__desc">玩过的和想玩的</span>
+          </div>
+          <div class="mgrid" id="gameGrid"></div>
+        </section>
+
+        <section class="view card viewcard" data-view="board" hidden>
+          <div class="card__title viewcard__head">留言板
+            <span class="viewcard__desc">留下你的脚印</span>
+          </div>
+          <div id="boardBox"></div>
+        </section>
+
+      </div>
+
+      <!-- 右侧栏 -->
+      <aside class="aside aside--right">
+        <div class="card">
+          <div class="card__title">统计</div>
+          <div class="stats">
+            <div class="statrow"><span>内容</span><b id="statPosts">0</b></div>
+            <div class="statrow"><span>总字数</span><b id="statWords">0</b></div>
+            <div class="statrow"><span>运行天数</span><b id="statDays">0</b></div>
+            <div class="statrow"><span>最近更新</span><b id="statUpdate">—</b></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">日历</div>
+          <div class="cal">
+            <div class="cal__head">
+              <button type="button" class="cal__nav" id="calPrev" aria-label="上个月">‹</button>
+              <b id="calTitle"></b>
+              <button type="button" class="cal__nav" id="calNext" aria-label="下个月">›</button>
+            </div>
+            <div class="cal__grid" id="calGrid"></div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <footer class="foot">
+      <p id="footText"></p>
+      <p class="foot__dim">
+        © <span id="year"></span> <span id="footName"></span>
+        <span id="footExtra"></span>
+      </p>
+    </footer>
+  </main>
+
+  <script src="js/posts.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/cats.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/media.js"></script>
+  <script src="js/moments.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/gate.js"></script>
+  <script>
+    // 留言板挂载：加一层保护，避免某个 js 没加载成功时整页后续脚本都停掉
+    if (window.BlogBoard) {
+      BlogBoard.mount(document.getElementById("boardBox"), "main", "留言板");
+    }
+  </script>
+
+  <!-- 首屏轮播由 js/home.js 统一控制（图片在 js/posts.js 的 SCENES 里配置），
+       不要在 HTML 里再写一份定时器，否则两套会互相抢类名、图片闪一下就没了。 -->
+
+</body>
+</html>

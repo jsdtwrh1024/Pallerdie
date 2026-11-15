@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLP 训练实验室 · 参数学习与可视化</title>
+  <meta name="description" content="在浏览器里亲手训练一个三层感知机，观察决策边界、损失曲线与权重矩阵的实时变化。">
+  <link rel="stylesheet" href="mlp.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="back" href="../home.html">← 返回</a>
+  <div class="topbar-title">
+    <h1>MLP 训练实验室</h1>
+    <span>多层感知机 · 参数学习与可视化</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= 控制条 ================= -->
+  <div class="toolbar">
+    <button id="playBtn" class="btn btn-primary">播放</button>
+    <button id="stepBtn" class="btn">单步</button>
+    <button id="resetBtn" class="btn">重置</button>
+    <div class="stats">
+      <span><i>epoch</i><b id="statEpoch">0</b></span>
+      <span><i>loss</i><b id="statLoss">—</b></span>
+      <span><i>acc</i><b id="statAcc">—</b></span>
+    </div>
+  </div>
+
+  <div id="warn" class="warn" hidden></div>
+
+  <!-- ================= 主视图 ================= -->
+  <div class="grid-main">
+
+    <section class="panel panel-canvas">
+      <div class="panel-head">
+        <h2>决策边界</h2>
+        <p>左键空白处加点 · 左键点已有点看解剖 · 右键换类别</p>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="field" aria-label="决策边界与数据点"></canvas>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:#D85A30"></i>类 0</span>
+        <span><i class="dot" style="background:#378ADD"></i>类 1</span>
+        <span><i class="dot" style="background:#BA7517"></i>类 2</span>
+        <span class="legend-sep"></span>
+        <span class="muted">着色区域 = 网络当前的判断</span>
+      </div>
+    </section>
+
+    <section class="panel panel-params">
+      <div class="panel-head">
+        <h2>参数</h2>
+        <p>改任意一项都会重新初始化网络</p>
+      </div>
+
+      <div class="field-row">
+        <label for="lr">学习率 <b id="lrVal">0.100</b></label>
+        <input type="range" id="lr" min="-3" max="0" step="0.1" value="-1">
+      </div>
+
+      <div class="field-row">
+        <label for="h1">隐藏层 1 神经元 <b id="h1Val">8</b></label>
+        <input type="range" id="h1" min="1" max="12" step="1" value="8">
+      </div>
+
+      <div class="field-row">
+        <label for="h2">隐藏层 2 神经元 <b id="h2Val">8</b></label>
+        <input type="range" id="h2" min="0" max="12" step="1" value="8">
+      </div>
+
+      <div class="field-row">
+        <label for="act">激活函数</label>
+        <select id="act">
+          <option value="relu" selected>ReLU</option>
+          <option value="tanh">tanh</option>
+          <option value="sigmoid">sigmoid</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label for="init">初始化</label>
+        <select id="init">
+          <option value="xavier" selected>Xavier</option>
+          <option value="small">小随机 (0.02)</option>
+          <option value="zero">全零</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label for="batch">批大小 <b id="batchVal">16</b></label>
+        <input type="range" id="batch" min="4" max="64" step="4" value="16">
+      </div>
+
+      <div class="field-row">
+        <label>画笔类别</label>
+        <div class="class-picker" id="classPicker">
+          <button class="pick is-active" data-c="0" style="--c:#D85A30">类 0</button>
+          <button class="pick" data-c="1" style="--c:#378ADD">类 1</button>
+          <button class="pick" data-c="2" style="--c:#BA7517">类 2</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= 曲线与权重 ================= -->
+  <div class="grid-sub">
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>损失曲线</h2>
+        <p>每个 epoch 全量交叉熵</p>
+      </div>
+      <div class="canvas-wrap short">
+        <canvas id="lossChart" aria-label="损失曲线"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>权重矩阵</h2>
+        <p>暖色为正、冷色为负，色深表示绝对值</p>
+      </div>
+      <div class="layer-tabs" id="layerTabs"></div>
+      <div class="canvas-wrap short">
+        <canvas id="heat" aria-label="权重矩阵热力图"></canvas>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= 网络结构 ================= -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>网络结构</h2>
+      <p>线条颜色 = 权重正负，粗细 = 绝对值。鼠标停在一条线上可看具体数值</p>
+    </div>
+    <div class="net-wrap">
+      <svg id="netSvg" role="img" aria-label="网络结构图"></svg>
+    </div>
+  </section>
+
+  <!-- ================= 单步解剖 ================= -->
+  <section class="panel" id="anatomyPanel">
+    <div class="panel-head">
+      <h2>单步解剖</h2>
+      <p>点画布上的任意一个点，逐步看它走完一次前向与反向</p>
+    </div>
+    <div id="anatomy" class="anatomy-empty">
+      还没有选中的样本。
+    </div>
+  </section>
+
+  <!-- ================= 说明 ================= -->
+  <section class="notes">
+    <h2>看什么</h2>
+    <ol>
+      <li>
+        <b>学习率拉到 0.5 以上</b>，损失会卡在 1.1 附近上下抖动、再也降不下去 —— 每一步都跨过了最低点，
+        在山谷两侧来回跳。退回 0.1 左右最稳。
+      </li>
+      <li>
+        <b>把隐藏层 1 降到 2 个神经元、隐藏层 2 设为「无」</b>，准确率会停在 45% 左右，决策边界只剩两段折线。
+        螺旋这种形状得靠足够多的折线去拼，神经元不够就拼不出来。
+      </li>
+      <li>
+        <b>激活函数换成 sigmoid</b>，跑同样的轮数准确率只有 36% 左右。sigmoid 的导数最大只有 0.25，
+        误差每往回传一层就被压小一次，层数越深越明显。
+      </li>
+      <li>
+        <b>初始化选「全零」</b>，损失几乎不下降。同一层所有神经元梯度完全相同，永远保持对称，等于只有一个神经元。
+      </li>
+      <li>
+        <b>点开任意一个样本</b>，能看到它每一层的 z 和 a、各层的 δ，以及 Δw = δ · a 这个乘法具体算出了什么。
+        这一块对应的是“实现”，前面那些图对应的是“可视化”。
+      </li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>MLP 训练实验室 · 纯 JavaScript 手写前向与反向传播</span>
+  <span><code>js/nn.js</code> 是数学，<code>js/app.js</code> 是绘制</span>
+</footer>
+
+<script src="js/nn.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-font="xingkai" data-texture="feather">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我的小站</title>
+  <meta name="description" content="记录、收藏，和一些喜欢的东西。">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page--post">
+
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="topbar is-stuck" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="home.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name" id="brandName">我的小站</span>
+      </a>
+      <nav class="nav" aria-label="站内导航">
+        <a href="home.html">主页</a>
+        <a href="home.html#anime">番剧</a>
+        <a href="home.html#game">游戏</a>
+        <a href="home.html#board">留言板</a>
+      </nav>
+      <div class="topbar__actions">
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="切换深浅色"></button>
+        <button class="iconbtn" id="panelBtn" type="button" aria-label="主页主题设置" aria-expanded="false"></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap wrap--narrow">
+    <article class="article" id="article">
+      <p class="article__loading">正在载入…</p>
+    </article>
+    <p class="backlink"><a href="home.html">← 返回列表</a></p>
+  </main>
+
+  <footer class="foot wrap wrap--narrow">
+    <p class="foot__dim">© <span id="year">2026</span> <span id="footName">我的小站</span><span id="footExtra"></span></p>
+  </footer>
+
+  <script src="js/posts.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/post.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/gate.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
