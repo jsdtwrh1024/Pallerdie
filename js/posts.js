@@ -29,7 +29,7 @@ const SITE = {
    - 单张建议压缩到 300KB 以内，不然首屏加载会慢
    - 有一张图加载失败时，那一屏会自动退回黄昏色块，不会白屏            */
 const SCENES = [
-  { src: "images/bg1.jpg", sub: "" },
+  { src: "images/bg1.jpg", sub: "我们的名字，是夜里海波上发出的光，痕迹也不留就泯灭了。" },
   { src: "images/bj2.jpg", sub: "不要温柔地走进那个凉夜" },
   { src: "images/bj3.jpg", sub: "我曾梦见，彼此亲密无间；醒来发现，我们形同陌路" }
 ];
