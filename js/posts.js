@@ -144,7 +144,7 @@ const ADMIN = { passcode: "Wrh20071024." };
    （填好前保持 SITE_GISCUS = null 即可）                                 */
 const SITE_GISCUS = null;
 
-/* ---------- 工具：字数自动统计，不用手写 ---------- */
+/* ---------- 工具：字数自动统计 ---------- */
 function wordCount(post) {
   return post.body.join("").replace(/<[^>]+>/g, "").replace(/\s/g, "").length;
 }
