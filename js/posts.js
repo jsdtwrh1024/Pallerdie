@@ -142,7 +142,12 @@ const ADMIN = { passcode: "Wrh20071024." };
    https://giscus.app ，按提示配置后把生成的四项填到这里——
    const SITE_GISCUS = { repo: "用户名/仓库名", repoId: "...", category: "Announcements", categoryId: "..." };
    （填好前保持 SITE_GISCUS = null 即可）                                 */
-const SITE_GISCUS = null;
+const SITE_GISCUS = { 
+    repo: "jsdtwrh1024/PallerDie", 
+    repoId: "R_kgDOVOMLRw", 
+    category: "Announcements", 
+    categoryId: "DIC_kwDOVOMLR84DLjBE" 
+};
 
 /* ---------- 工具：字数自动统计 ---------- */
 function wordCount(post) {
