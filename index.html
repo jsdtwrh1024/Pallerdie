@@ -119,6 +119,14 @@
             <button type="button" class="mini-btn admin-only" id="momentAdd">＋ 发布动态</button>
           </div>
           <div id="momentsBox"></div>
+          <!-- 管理员专属的云端发布面板（默认隐藏） -->
+<div id="cloudPublishPanel" style="display: none; margin-bottom: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+  <textarea id="cloudPostContent" placeholder="写点新动态..." style="width: 100%; height: 80px; margin-bottom: 10px;"></textarea>
+  <button id="cloudPublishBtn" style="background: #ff6b6b; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">发布到云端 (GitHub)</button>
+  <span id="cloudStatus" style="margin-left: 10px; color: green;"></span>
+</div>
+
+<div id="momentsBox"></div>
         </section>
 
         <section class="view" data-view="study" hidden>
@@ -198,6 +206,7 @@
   <script src="js/moments.js"></script>
   <script src="js/board.js"></script>
   <script src="js/gate.js"></script>
+  <script src="js/cloud-sync.js"></script>
   <script>
     // 留言板挂载：加一层保护，避免某个 js 没加载成功时整页后续脚本都停掉
     if (window.BlogBoard) {
