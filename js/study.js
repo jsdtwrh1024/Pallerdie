@@ -10,7 +10,7 @@
 
     var card = document.createElement("a");
     card.className = "post post--mlp";
-    card.href = "agent-lab.js";
+    card.href = "agent-lab.html";
     card.setAttribute("data-agent-lab-card", "");
     card.innerHTML =
       '<h2 class="post__title">Agent 使用展示</h2>' +

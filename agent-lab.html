@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从一句需求到能上线的网站：Agent 使用过程、功能清单、迭代时间线与数据统计。">
+  <title>Agent 使用展示</title>
+  <link rel="stylesheet" href="css/agent-lab.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="index.html#study">← 返回学习区</a>
+    <div class="topbar-title">
+      <h1 id="agTitle">Agent 使用展示</h1>
+      <span id="agSub">从一句需求到能上线的网站</span>
+    </div>
+    <time class="topbar-date" id="agSince"></time>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="hero__eyebrow">AGENT PROJECT LOG</p>
+      <p class="hero__lead" id="agLead"></p>
+    </section>
+
+    <section class="ovgrid" id="ovGrid" aria-label="项目概览"></section>
+
+    <section class="block">
+      <div class="block__head">
+        <h2>任务清单</h2>
+        <p>从最初的站点骨架，到内容管理与交互打磨</p>
+        <div class="prog">
+          <span class="prog__bar"><i id="taskBar" style="width:0"></i></span>
+          <span class="prog__lab" id="taskLabel"></span>
+        </div>
+      </div>
+      <div class="taskgrid" id="taskGrid"></div>
+    </section>
+
+    <section class="block">
+      <div class="block__head"><h2>关键决策时间线</h2><p>项目从起点到细节打磨的迭代记录</p></div>
+      <ol class="tl-list" id="tlList"></ol>
+    </section>
+
+    <section class="block">
+      <div class="block__head"><h2>数据统计</h2><p>用图表回顾需求类型、每次改动规模和代码构成</p></div>
+      <div class="grid-2">
+        <section class="panel">
+          <div class="panel-head"><h3 id="donutTitle">这段时间我在让它干什么</h3><p>按提需求的次数粗略归类</p></div>
+          <div class="donut-wrap">
+            <canvas id="donutCv" aria-label="需求类型分布图"></canvas>
+            <ul class="donut-legend" id="donutLegend"></ul>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h3>每次改动的规模</h3><p>横轴 = 改动批次，纵轴 = 涉及文件数</p></div>
+          <div class="bar-wrap"><canvas id="barCv" aria-label="改动规模柱状图"></canvas></div>
+        </section>
+      </div>
+      <section class="panel panel--stack">
+        <div class="panel-head"><h3>站点代码构成</h3><p>自己写的纯 HTML / CSS / JS，无任何依赖</p></div>
+        <div class="stk" id="stackRows"></div>
+        <div class="stk__total" id="stackTotal"></div>
+      </section>
+    </section>
+
+    <section class="block">
+      <div class="block__head"><h2>多模型分工</h2><p>不同模型在方案讨论、开发与文案上的分工</p></div>
+      <div class="mdlgrid" id="modelGrid"></div>
+    </section>
+
+    <section class="block">
+      <div class="block__head"><h2>改造前后</h2><p>从单文件手动维护到数据、样式与逻辑分层</p></div>
+      <div class="cmp">
+        <section class="cmp__col cmp__col--before"><h3>BEFORE</h3><ul id="beforeList"></ul></section>
+        <div class="cmp__arrow" aria-hidden="true">→</div>
+        <section class="cmp__col cmp__col--after"><h3>AFTER</h3><ul id="afterList"></ul></section>
+      </div>
+    </section>
+
+    <section class="notes">
+      <h2>最后的想法</h2>
+      <ol class="take" id="takeList"></ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Agent 使用展示 · 从需求到可运行的网站</span>
+    <a href="index.html#study">返回学习区</a>
+  </footer>
+
+  <script src="js/agent-lab.js"></script>
+</body>
+</html>
